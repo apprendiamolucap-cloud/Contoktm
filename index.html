@@ -307,25 +307,8 @@
 
   </div>
 
-  <!-- FIREBASE APPLICATION SCRIPT -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    // Configurazione Firebase Realtime Database
-    const firebaseConfig = {
-      databaseURL: "https://ktm-125-tracker-default-rtdb.europe-west1.firebasedatabase.app"
-    };
-
-    let app, db, donationsRef;
-    try {
-      app = initializeApp(firebaseConfig);
-      db = getDatabase(app);
-      donationsRef = ref(db, "donations");
-    } catch(err) {
-      console.warn("Firebase non attivo o in modalità offline:", err);
-    }
-
+  <!-- JAVASCRIPT APPLICATION -->
+  <script>
     const TARGET_AMOUNT = 5000;
     let currentUser = localStorage.getItem("syntax_user") || "";
     let donationsData = JSON.parse(localStorage.getItem("ktm_local_donations") || "[]");
@@ -359,7 +342,6 @@
       }
     };
 
-    // Inizializzazione Event Listeners
     document.addEventListener("DOMContentLoaded", () => {
       if (currentUser) {
         showDashboard();
@@ -367,7 +349,7 @@
         showAuth();
       }
 
-      // Event listener per Login Form
+      // Form Login
       document.getElementById("login-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const input = document.getElementById("user-name-input").value.trim();
@@ -378,14 +360,14 @@
         }
       });
 
-      // Event listener per Logout
+      // Logout
       document.getElementById("logout-btn").addEventListener("click", () => {
         localStorage.removeItem("syntax_user");
         currentUser = "";
         showAuth();
       });
 
-      // Event listener per Donazione Form con Fallback Garantito
+      // Form Donazione
       document.getElementById("donation-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const amountInput = document.getElementById("donation-amount");
@@ -403,16 +385,9 @@
           timestamp: Date.now()
         };
 
-        // Salva in locale immediatamente
         donationsData.push(newDonation);
         localStorage.setItem("ktm_local_donations", JSON.stringify(donationsData));
 
-        // Prova a sincronizzare su Firebase se disponibile
-        if (donationsRef) {
-          push(donationsRef, newDonation).catch(err => console.warn("Sincronizzazione Cloud in differita:", err));
-        }
-
-        // Pulisci input ed esegui effetto
         amountInput.value = "";
         noteInput.value = "";
 
@@ -422,7 +397,7 @@
         renderApp(newTotal);
       });
 
-      // Event listener per Tasti Rapidi (+20€, +50€, +100€)
+      // Tasti rapidi
       document.querySelectorAll(".quick-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const amt = btn.getAttribute("data-amount");
@@ -430,7 +405,7 @@
         });
       });
 
-      // Event listener per Pulsanti Marche Moto
+      // Sezione Marche
       document.querySelectorAll(".bike-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const key = btn.getAttribute("data-bike");
@@ -451,7 +426,9 @@
         });
       });
 
-      listenToDatabase();
+      const initialTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
+      previousTotal = initialTotal;
+      renderApp(initialTotal);
     });
 
     function showAuth() {
@@ -463,11 +440,8 @@
       document.getElementById("auth-screen").classList.add("hidden");
       document.getElementById("dashboard-screen").classList.remove("hidden");
       document.getElementById("logged-user-display").innerText = currentUser;
-      const initialTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
-      renderApp(initialTotal);
     }
 
-    // Effetti Animazioni Aggiunta Soldi
     function triggerMoneyEffects(addedAmount) {
       if (typeof confetti === 'function') {
         confetti({
@@ -495,40 +469,7 @@
       }, 1200);
     }
 
-    // Ascolto Firebase Realtime Database
-    function listenToDatabase() {
-      if (!donationsRef) return;
-
-      onValue(donationsRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          const cloudData = [];
-          Object.keys(data).forEach(key => {
-            cloudData.push(data[key]);
-          });
-          
-          if (cloudData.length >= donationsData.length) {
-            donationsData = cloudData;
-            localStorage.setItem("ktm_local_donations", JSON.stringify(donationsData));
-          }
-        }
-
-        const newTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
-
-        if (previousTotal > 0 && newTotal > previousTotal) {
-          const added = newTotal - previousTotal;
-          triggerMoneyEffects(added);
-        }
-
-        previousTotal = newTotal;
-        renderApp(newTotal);
-      }, (err) => {
-        console.warn("Utilizzo salvataggio locale attivo:", err);
-      });
-    }
-
     function renderApp(total) {
-      // Totale & Progresso
       document.getElementById("total-amount").innerText = `€ ${total.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
       const percentage = Math.min(100, Math.round((total / TARGET_AMOUNT) * 100));
@@ -572,7 +513,7 @@
         }).join('');
       }
 
-      // Cronologia Recente
+      // Cronologia
       const recentContainer = document.getElementById("recent-donations-list");
       const recentSorted = [...donationsData].sort((a, b) => b.timestamp - a.timestamp);
 
