@@ -317,13 +317,18 @@
       databaseURL: "https://ktm-125-tracker-default-rtdb.europe-west1.firebasedatabase.app"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const donationsRef = ref(db, "donations");
+    let app, db, donationsRef;
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+      donationsRef = ref(db, "donations");
+    } catch(err) {
+      console.warn("Firebase non attivo o in modalità offline:", err);
+    }
 
     const TARGET_AMOUNT = 5000;
     let currentUser = localStorage.getItem("syntax_user") || "";
-    let donationsData = [];
+    let donationsData = JSON.parse(localStorage.getItem("ktm_local_donations") || "[]");
     let previousTotal = 0;
 
     const bikesData = {
@@ -380,7 +385,7 @@
         showAuth();
       });
 
-      // Event listener per Donazione Form
+      // Event listener per Donazione Form con Fallback Garantito
       document.getElementById("donation-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const amountInput = document.getElementById("donation-amount");
@@ -398,12 +403,23 @@
           timestamp: Date.now()
         };
 
-        push(donationsRef, newDonation).then(() => {
-          amountInput.value = "";
-          noteInput.value = "";
-        }).catch(err => {
-          console.error("Errore salvataggio donazione:", err);
-        });
+        // Salva in locale immediatamente
+        donationsData.push(newDonation);
+        localStorage.setItem("ktm_local_donations", JSON.stringify(donationsData));
+
+        // Prova a sincronizzare su Firebase se disponibile
+        if (donationsRef) {
+          push(donationsRef, newDonation).catch(err => console.warn("Sincronizzazione Cloud in differita:", err));
+        }
+
+        // Pulisci input ed esegui effetto
+        amountInput.value = "";
+        noteInput.value = "";
+
+        const newTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
+        triggerMoneyEffects(amount);
+        previousTotal = newTotal;
+        renderApp(newTotal);
       });
 
       // Event listener per Tasti Rapidi (+20€, +50€, +100€)
@@ -447,6 +463,8 @@
       document.getElementById("auth-screen").classList.add("hidden");
       document.getElementById("dashboard-screen").classList.remove("hidden");
       document.getElementById("logged-user-display").innerText = currentUser;
+      const initialTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
+      renderApp(initialTotal);
     }
 
     // Effetti Animazioni Aggiunta Soldi
@@ -479,14 +497,20 @@
 
     // Ascolto Firebase Realtime Database
     function listenToDatabase() {
+      if (!donationsRef) return;
+
       onValue(donationsRef, (snapshot) => {
         const data = snapshot.val();
-        donationsData = [];
-
         if (data) {
+          const cloudData = [];
           Object.keys(data).forEach(key => {
-            donationsData.push(data[key]);
+            cloudData.push(data[key]);
           });
+          
+          if (cloudData.length >= donationsData.length) {
+            donationsData = cloudData;
+            localStorage.setItem("ktm_local_donations", JSON.stringify(donationsData));
+          }
         }
 
         const newTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
@@ -498,6 +522,8 @@
 
         previousTotal = newTotal;
         renderApp(newTotal);
+      }, (err) => {
+        console.warn("Utilizzo salvataggio locale attivo:", err);
       });
     }
 
