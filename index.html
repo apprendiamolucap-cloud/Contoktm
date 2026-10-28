@@ -307,11 +307,28 @@
 
   </div>
 
-  <!-- JAVASCRIPT APPLICATION -->
-  <script>
+  <!-- FIREBASE REALTIME DATABASE SCRIPTS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Configurazione Database Cloud Firebase Condiviso
+    const firebaseConfig = {
+      databaseURL: "https://syntax-santos-ktm-default-rtdb.europe-west1.firebasedatabase.app"
+    };
+
+    let app, db, donationsRef;
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+      donationsRef = ref(db, "donations");
+    } catch(err) {
+      console.warn("Errore connessione Firebase:", err);
+    }
+
     const TARGET_AMOUNT = 5000;
     let currentUser = localStorage.getItem("syntax_user") || "";
-    let donationsData = JSON.parse(localStorage.getItem("ktm_local_donations") || "[]");
+    let donationsData = [];
     let previousTotal = 0;
 
     const bikesData = {
@@ -349,7 +366,7 @@
         showAuth();
       }
 
-      // Form Login
+      // Login Form
       document.getElementById("login-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const input = document.getElementById("user-name-input").value.trim();
@@ -367,7 +384,7 @@
         showAuth();
       });
 
-      // Form Donazione
+      // Donazione Form sincronizzata sul Cloud
       document.getElementById("donation-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const amountInput = document.getElementById("donation-amount");
@@ -385,19 +402,17 @@
           timestamp: Date.now()
         };
 
-        donationsData.push(newDonation);
-        localStorage.setItem("ktm_local_donations", JSON.stringify(donationsData));
-
-        amountInput.value = "";
-        noteInput.value = "";
-
-        const newTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
-        triggerMoneyEffects(amount);
-        previousTotal = newTotal;
-        renderApp(newTotal);
+        if (donationsRef) {
+          push(donationsRef, newDonation).then(() => {
+            amountInput.value = "";
+            noteInput.value = "";
+          }).catch(err => {
+            console.error("Errore invio cloud:", err);
+          });
+        }
       });
 
-      // Tasti rapidi
+      // Tasti rapidi importo
       document.querySelectorAll(".quick-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const amt = btn.getAttribute("data-amount");
@@ -405,7 +420,7 @@
         });
       });
 
-      // Sezione Marche
+      // Sezione marche moto
       document.querySelectorAll(".bike-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const key = btn.getAttribute("data-bike");
@@ -426,9 +441,7 @@
         });
       });
 
-      const initialTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
-      previousTotal = initialTotal;
-      renderApp(initialTotal);
+      listenToDatabase();
     });
 
     function showAuth() {
@@ -467,6 +480,34 @@
       setTimeout(() => {
         floatEl.remove();
       }, 1200);
+    }
+
+    // Ascolto in tempo reale dei dati dal Cloud per tutti i dispositivi
+    function listenToDatabase() {
+      if (!donationsRef) return;
+
+      onValue(donationsRef, (snapshot) => {
+        const data = snapshot.val();
+        donationsData = [];
+
+        if (data) {
+          Object.keys(data).forEach(key => {
+            donationsData.push(data[key]);
+          });
+        }
+
+        const newTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
+
+        if (previousTotal > 0 && newTotal > previousTotal) {
+          const added = newTotal - previousTotal;
+          triggerMoneyEffects(added);
+        }
+
+        previousTotal = newTotal;
+        renderApp(newTotal);
+      }, (err) => {
+        console.warn("Errore lettura database:", err);
+      });
     }
 
     function renderApp(total) {
