@@ -58,7 +58,7 @@
       100% { transform: scale(1); }
     }
 
-    /* Animazione Aggiunta Cifra Veloce (Floating +€) */
+    /* Animazione Cifra Fluttuante (+€) */
     @keyframes floatUp {
       0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
       30% { opacity: 1; transform: translate(-50%, -20px) scale(1.2); }
@@ -67,16 +67,16 @@
     .floating-money {
       position: absolute;
       left: 50%;
-      top: 20%;
+      top: 25%;
       pointer-events: none;
       animation: floatUp 1.2s ease-out forwards;
       font-weight: 900;
       color: #d65a8a;
       text-shadow: 0 0 15px rgba(214, 90, 138, 0.9);
-      z-index: 40;
+      z-index: 50;
     }
 
-    /* Intro splash screen animation */
+    /* Splash Screen Animation */
     #splash-screen {
       animation: fadeOutSplash 0.8s ease-in-out forwards;
       animation-delay: 2.2s;
@@ -91,7 +91,7 @@
 </head>
 <body class="min-h-screen pb-16 antialiased selection:bg-brand-pink selection:text-white">
 
-  <!-- ANIMAZIONE INIZIALE CON IL TUO LOGO (SYNTAX SANTOS) -->
+  <!-- ANIMAZIONE INIZIALE (SYNTAX SANTOS LOGO) -->
   <div id="splash-screen" class="fixed inset-0 z-50 bg-[#0a0a0c] flex flex-col items-center justify-center p-4">
     <div class="relative flex flex-col items-center animate-bounce mb-4">
       <div class="w-28 h-28 rounded-2xl bg-white p-3 shadow-2xl flex items-center justify-center border-2 border-brand-pink">
@@ -116,7 +116,6 @@
 
     <!-- HEADER & LOGO FIRMA CREATORE -->
     <header class="text-center mb-6">
-      <!-- FIRMA CREATORE -->
       <div class="flex items-center justify-between bg-zinc-900/80 border border-brand-pink/30 rounded-2xl p-3 mb-4 backdrop-blur-md">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black text-brand-pink text-lg shadow">
@@ -130,7 +129,7 @@
         <span class="text-[10px] font-bold bg-brand-pink/20 text-brand-pink border border-brand-pink/40 px-2.5 py-1 rounded-full uppercase">Official Dev</span>
       </div>
 
-      <!-- BANNER MOTO DEI SOGNI (KTM 125 SX) -->
+      <!-- BANNER MOTO DEI SOGNI -->
       <div class="relative w-full h-64 sm:h-80 bg-zinc-950 rounded-2xl overflow-hidden mb-4 border border-zinc-800 shadow-2xl group flex items-center justify-center">
         <img 
           src="https://i.pinimg.com/736x/73/24/6f/73246f2d06d0bccd5d64e80d26475e9e.jpg" 
@@ -155,7 +154,7 @@
         <p class="text-zinc-400 text-sm mt-1">Inserisci il tuo nome per registrarti ed accedere al fondo della mia moto.</p>
       </div>
 
-      <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+      <form id="login-form" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Il tuo Nome / Parente</label>
           <input 
@@ -184,7 +183,7 @@
           <span class="w-2.5 h-2.5 bg-brand-pink rounded-full animate-pulse"></span>
           <span class="text-sm text-zinc-300">Sostenitore: <strong id="logged-user-display" class="text-white font-bold"></strong></span>
         </div>
-        <button onclick="handleLogout()" class="text-xs text-zinc-500 hover:text-brand-pink underline">Esci</button>
+        <button id="logout-btn" class="text-xs text-zinc-500 hover:text-brand-pink underline">Esci</button>
       </div>
 
       <!-- TOTALE E BARRA DI PROGRESSO (OBIETTIVO 5000€) -->
@@ -212,7 +211,7 @@
           <span class="text-brand-pink">💖</span> Aggiungi una Donazione
         </h3>
 
-        <form id="donation-form" onsubmit="handleDonation(event)" class="space-y-4">
+        <form id="donation-form" class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Importo (€)</label>
             <input 
@@ -228,9 +227,9 @@
 
           <!-- TASTI RAPIDI -->
           <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="setQuickAmount(20)" class="bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700">+20€</button>
-            <button type="button" onclick="setQuickAmount(50)" class="bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700">+50€</button>
-            <button type="button" onclick="setQuickAmount(100)" class="bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700">+100€</button>
+            <button type="button" class="quick-btn bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700" data-amount="20">+20€</button>
+            <button type="button" class="quick-btn bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700" data-amount="50">+50€</button>
+            <button type="button" class="quick-btn bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700" data-amount="100">+100€</button>
           </div>
 
           <div>
@@ -245,6 +244,7 @@
 
           <button 
             type="submit" 
+            id="donation-submit-btn"
             class="w-full bg-brand-pink hover:bg-pink-600 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-lg shadow-pink-500/20 transition-all transform active:scale-95 uppercase tracking-wider text-sm flex items-center justify-center gap-2"
           >
             <span>🚀</span> Registra Donazione
@@ -261,11 +261,11 @@
 
         <!-- SELETTORE MARCHE -->
         <div class="grid grid-cols-3 gap-2 mb-4">
-          <button onclick="selectBike('ktm')" class="bike-btn bg-brand-pink text-white font-bold text-xs py-2.5 rounded-xl border border-brand-pink transition-all" id="btn-ktm">KTM SX</button>
-          <button onclick="selectBike('yz')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-yz">YAMAHA YZ</button>
-          <button onclick="selectBike('fantic')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-fantic">FANTIC</button>
-          <button onclick="selectBike('gasgas')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-gasgas">GASGAS</button>
-          <button onclick="selectBike('beta')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-beta">BETA</button>
+          <button class="bike-btn bg-brand-pink text-white font-bold text-xs py-2.5 rounded-xl border border-brand-pink transition-all" data-bike="ktm">KTM SX</button>
+          <button class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" data-bike="yz">YAMAHA YZ</button>
+          <button class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" data-bike="fantic">FANTIC</button>
+          <button class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" data-bike="gasgas">GASGAS</button>
+          <button class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" data-bike="beta">BETA</button>
         </div>
 
         <!-- CARD MOTO SELEZIONATA -->
@@ -326,7 +326,6 @@
     let donationsData = [];
     let previousTotal = 0;
 
-    // Database marche moto
     const bikesData = {
       ktm: {
         title: "KTM SX 125 2T (Moto dei Sogni 🔥)",
@@ -355,54 +354,89 @@
       }
     };
 
-    // Inizializzazione
-    window.addEventListener("DOMContentLoaded", () => {
+    // Inizializzazione Event Listeners
+    document.addEventListener("DOMContentLoaded", () => {
       if (currentUser) {
         showDashboard();
       } else {
         showAuth();
       }
-      listenToDatabase();
-    });
 
-    // Gestione Selezione Moto
-    window.selectBike = function(key) {
-      const bike = bikesData[key];
-      if (!bike) return;
-
-      document.getElementById("bike-title").innerText = bike.title;
-      document.getElementById("bike-desc").innerText = bike.desc;
-      document.getElementById("bike-img").src = bike.img;
-
-      document.querySelectorAll('.bike-btn').forEach(btn => {
-        btn.classList.remove('bg-brand-pink', 'text-white', 'border-brand-pink');
-        btn.classList.add('bg-zinc-950', 'text-zinc-300', 'border-zinc-800');
+      // Event listener per Login Form
+      document.getElementById("login-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = document.getElementById("user-name-input").value.trim();
+        if (input) {
+          currentUser = input;
+          localStorage.setItem("syntax_user", currentUser);
+          showDashboard();
+        }
       });
 
-      const activeBtn = document.getElementById(`btn-${key}`);
-      if (activeBtn) {
-        activeBtn.classList.remove('bg-zinc-950', 'text-zinc-300', 'border-zinc-800');
-        activeBtn.classList.add('bg-brand-pink', 'text-white', 'border-brand-pink');
-      }
-    };
+      // Event listener per Logout
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        localStorage.removeItem("syntax_user");
+        currentUser = "";
+        showAuth();
+      });
 
-    // Login Handler
-    window.handleLogin = function(e) {
-      e.preventDefault();
-      const input = document.getElementById("user-name-input").value.trim();
-      if (input) {
-        currentUser = input;
-        localStorage.setItem("syntax_user", currentUser);
-        showDashboard();
-      }
-    };
+      // Event listener per Donazione Form
+      document.getElementById("donation-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const amountInput = document.getElementById("donation-amount");
+        const noteInput = document.getElementById("donation-note");
 
-    // Logout Handler
-    window.handleLogout = function() {
-      localStorage.removeItem("syntax_user");
-      currentUser = "";
-      showAuth();
-    };
+        const amount = parseFloat(amountInput.value);
+        const note = noteInput.value.trim();
+
+        if (isNaN(amount) || amount <= 0) return;
+
+        const newDonation = {
+          user: currentUser || "Anonimo",
+          amount: amount,
+          note: note,
+          timestamp: Date.now()
+        };
+
+        push(donationsRef, newDonation).then(() => {
+          amountInput.value = "";
+          noteInput.value = "";
+        }).catch(err => {
+          console.error("Errore salvataggio donazione:", err);
+        });
+      });
+
+      // Event listener per Tasti Rapidi (+20€, +50€, +100€)
+      document.querySelectorAll(".quick-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const amt = btn.getAttribute("data-amount");
+          document.getElementById("donation-amount").value = amt;
+        });
+      });
+
+      // Event listener per Pulsanti Marche Moto
+      document.querySelectorAll(".bike-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-bike");
+          const bike = bikesData[key];
+          if (!bike) return;
+
+          document.getElementById("bike-title").innerText = bike.title;
+          document.getElementById("bike-desc").innerText = bike.desc;
+          document.getElementById("bike-img").src = bike.img;
+
+          document.querySelectorAll('.bike-btn').forEach(b => {
+            b.classList.remove('bg-brand-pink', 'text-white', 'border-brand-pink');
+            b.classList.add('bg-zinc-950', 'text-zinc-300', 'border-zinc-800');
+          });
+
+          btn.classList.remove('bg-zinc-950', 'text-zinc-300', 'border-zinc-800');
+          btn.classList.add('bg-brand-pink', 'text-white', 'border-brand-pink');
+        });
+      });
+
+      listenToDatabase();
+    });
 
     function showAuth() {
       document.getElementById("auth-screen").classList.remove("hidden");
@@ -410,57 +444,29 @@
     }
 
     function showDashboard() {
-      document.getElementById("auth-screen").classList.hidden = true;
       document.getElementById("auth-screen").classList.add("hidden");
       document.getElementById("dashboard-screen").classList.remove("hidden");
       document.getElementById("logged-user-display").innerText = currentUser;
     }
 
-    window.setQuickAmount = function(val) {
-      document.getElementById("donation-amount").value = val;
-    };
-
-    // Invio Donazione
-    window.handleDonation = function(e) {
-      e.preventDefault();
-      const amountInput = document.getElementById("donation-amount");
-      const noteInput = document.getElementById("donation-note");
-
-      const amount = parseFloat(amountInput.value);
-      const note = noteInput.value.trim();
-
-      if (!amount || amount <= 0) return;
-
-      const newDonation = {
-        user: currentUser,
-        amount: amount,
-        note: note,
-        timestamp: Date.now()
-      };
-
-      push(donationsRef, newDonation).then(() => {
-        amountInput.value = "";
-        noteInput.value = "";
-      });
-    };
-
-    // Trigger Animazioni Aggiunta Soldi
+    // Effetti Animazioni Aggiunta Soldi
     function triggerMoneyEffects(addedAmount) {
-      // 1. Confetti
-      confetti({
-        particleCount: 140,
-        spread: 90,
-        origin: { y: 0.6 },
-        colors: ['#d65a8a', '#ffffff', '#e879a8', '#ff6600']
-      });
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 140,
+          spread: 90,
+          origin: { y: 0.6 },
+          colors: ['#d65a8a', '#ffffff', '#e879a8', '#ff6600']
+        });
+      }
 
-      // 2. Animazione Pop del Totale
       const totalEl = document.getElementById("total-amount");
-      totalEl.classList.remove("pop-amount");
-      void totalEl.offsetWidth; // Trigger reflow
-      totalEl.classList.add("pop-amount");
+      if (totalEl) {
+        totalEl.classList.remove("pop-amount");
+        void totalEl.offsetWidth;
+        totalEl.classList.add("pop-amount");
+      }
 
-      // 3. Cifra fluttuante (+XX €)
       const floatEl = document.createElement("div");
       floatEl.className = "floating-money text-2xl sm:text-3xl font-black";
       floatEl.innerText = `+€ ${addedAmount.toLocaleString('it-IT')}`;
@@ -471,7 +477,7 @@
       }, 1200);
     }
 
-    // Ascolto Firebase Realtime
+    // Ascolto Firebase Realtime Database
     function listenToDatabase() {
       onValue(donationsRef, (snapshot) => {
         const data = snapshot.val();
@@ -485,7 +491,6 @@
 
         const newTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
 
-        // Se è stato aggiunto un importo, avvia l'animazione!
         if (previousTotal > 0 && newTotal > previousTotal) {
           const added = newTotal - previousTotal;
           triggerMoneyEffects(added);
@@ -497,14 +502,14 @@
     }
 
     function renderApp(total) {
-      // 1. Totale e Percentuale
+      // Totale & Progresso
       document.getElementById("total-amount").innerText = `€ ${total.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
       const percentage = Math.min(100, Math.round((total / TARGET_AMOUNT) * 100));
       document.getElementById("progress-bar").style.width = `${percentage}%`;
       document.getElementById("percentage-display").innerText = `${percentage}%`;
 
-      // 2. Classifica
+      // Classifica
       const userTotals = {};
       donationsData.forEach(item => {
         userTotals[item.user] = (userTotals[item.user] || 0) + item.amount;
@@ -541,7 +546,7 @@
         }).join('');
       }
 
-      // 3. Cronologia Recente
+      // Cronologia Recente
       const recentContainer = document.getElementById("recent-donations-list");
       const recentSorted = [...donationsData].sort((a, b) => b.timestamp - a.timestamp);
 
