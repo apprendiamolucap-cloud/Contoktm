@@ -47,6 +47,35 @@
     .progress-bar-fill {
       transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    /* Animazione Pop Totale */
+    .pop-amount {
+      animation: amountPulse 0.6s ease-out;
+    }
+    @keyframes amountPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.18); color: #ffffff; text-shadow: 0 0 25px rgba(214, 90, 138, 1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Animazione Aggiunta Cifra Veloce (Floating +€) */
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
+      30% { opacity: 1; transform: translate(-50%, -20px) scale(1.2); }
+      100% { opacity: 0; transform: translate(-50%, -60px) scale(1); }
+    }
+    .floating-money {
+      position: absolute;
+      left: 50%;
+      top: 20%;
+      pointer-events: none;
+      animation: floatUp 1.2s ease-out forwards;
+      font-weight: 900;
+      color: #d65a8a;
+      text-shadow: 0 0 15px rgba(214, 90, 138, 0.9);
+      z-index: 40;
+    }
+
     /* Intro splash screen animation */
     #splash-screen {
       animation: fadeOutSplash 0.8s ease-in-out forwards;
@@ -79,6 +108,9 @@
     </div>
   </div>
 
+  <!-- CONTAINER FLOATING ANIMATION -->
+  <div id="floating-container" class="fixed inset-0 pointer-events-none z-40"></div>
+
   <!-- APP CONTAINER -->
   <div id="app" class="max-w-xl mx-auto px-4 py-6">
 
@@ -98,7 +130,7 @@
         <span class="text-[10px] font-bold bg-brand-pink/20 text-brand-pink border border-brand-pink/40 px-2.5 py-1 rounded-full uppercase">Official Dev</span>
       </div>
 
-      <!-- BANNER MOTO DEI SOGNI (KTM 125 SX - IMMAGINE INTERA SENZA TAGLI) -->
+      <!-- BANNER MOTO DEI SOGNI (KTM 125 SX) -->
       <div class="relative w-full h-64 sm:h-80 bg-zinc-950 rounded-2xl overflow-hidden mb-4 border border-zinc-800 shadow-2xl group flex items-center justify-center">
         <img 
           src="https://i.pinimg.com/736x/73/24/6f/73246f2d06d0bccd5d64e80d26475e9e.jpg" 
@@ -156,11 +188,11 @@
       </div>
 
       <!-- TOTALE E BARRA DI PROGRESSO (OBIETTIVO 5000€) -->
-      <div class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl pink-glow">
+      <div id="total-card" class="relative bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl pink-glow transition-transform">
         <div class="flex justify-between items-end mb-2">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-zinc-400">Fondo Raccolto</span>
-            <div id="total-amount" class="text-4xl font-extrabold text-brand-pink pink-text mt-1">€ 0,00</div>
+            <div id="total-amount" class="text-4xl font-extrabold text-brand-pink pink-text mt-1 transition-all">€ 0,00</div>
           </div>
           <div class="text-right">
             <span class="text-xs text-zinc-400">Obiettivo: <strong class="text-white">€ 5.000</strong></span>
@@ -213,14 +245,14 @@
 
           <button 
             type="submit" 
-            class="w-full bg-brand-pink hover:bg-pink-600 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-lg shadow-pink-500/20 transition-all transform active:scale-95 uppercase tracking-wider text-sm"
+            class="w-full bg-brand-pink hover:bg-pink-600 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-lg shadow-pink-500/20 transition-all transform active:scale-95 uppercase tracking-wider text-sm flex items-center justify-center gap-2"
           >
-            Registra Donazione
+            <span>🚀</span> Registra Donazione
           </button>
         </form>
       </div>
 
-      <!-- SEZIONE MARCHE & MOTO 125 2T (IMMAGINI INTERE SENZA TAGLI) -->
+      <!-- SEZIONE MARCHE & MOTO 125 2T -->
       <div class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl">
         <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
           <span>🏁</span> Guida Moto 125 2 Tempi
@@ -292,6 +324,7 @@
     const TARGET_AMOUNT = 5000;
     let currentUser = localStorage.getItem("syntax_user") || "";
     let donationsData = [];
+    let previousTotal = 0;
 
     // Database marche moto
     const bikesData = {
@@ -341,7 +374,6 @@
       document.getElementById("bike-desc").innerText = bike.desc;
       document.getElementById("bike-img").src = bike.img;
 
-      // Aggiorna stile bottoni
       document.querySelectorAll('.bike-btn').forEach(btn => {
         btn.classList.remove('bg-brand-pink', 'text-white', 'border-brand-pink');
         btn.classList.add('bg-zinc-950', 'text-zinc-300', 'border-zinc-800');
@@ -378,6 +410,7 @@
     }
 
     function showDashboard() {
+      document.getElementById("auth-screen").classList.hidden = true;
       document.getElementById("auth-screen").classList.add("hidden");
       document.getElementById("dashboard-screen").classList.remove("hidden");
       document.getElementById("logged-user-display").innerText = currentUser;
@@ -408,15 +441,35 @@
       push(donationsRef, newDonation).then(() => {
         amountInput.value = "";
         noteInput.value = "";
-
-        confetti({
-          particleCount: 120,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ['#d65a8a', '#ffffff', '#e879a8', '#ff6600']
-        });
       });
     };
+
+    // Trigger Animazioni Aggiunta Soldi
+    function triggerMoneyEffects(addedAmount) {
+      // 1. Confetti
+      confetti({
+        particleCount: 140,
+        spread: 90,
+        origin: { y: 0.6 },
+        colors: ['#d65a8a', '#ffffff', '#e879a8', '#ff6600']
+      });
+
+      // 2. Animazione Pop del Totale
+      const totalEl = document.getElementById("total-amount");
+      totalEl.classList.remove("pop-amount");
+      void totalEl.offsetWidth; // Trigger reflow
+      totalEl.classList.add("pop-amount");
+
+      // 3. Cifra fluttuante (+XX €)
+      const floatEl = document.createElement("div");
+      floatEl.className = "floating-money text-2xl sm:text-3xl font-black";
+      floatEl.innerText = `+€ ${addedAmount.toLocaleString('it-IT')}`;
+      document.getElementById("floating-container").appendChild(floatEl);
+
+      setTimeout(() => {
+        floatEl.remove();
+      }, 1200);
+    }
 
     // Ascolto Firebase Realtime
     function listenToDatabase() {
@@ -430,13 +483,21 @@
           });
         }
 
-        renderApp();
+        const newTotal = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
+
+        // Se è stato aggiunto un importo, avvia l'animazione!
+        if (previousTotal > 0 && newTotal > previousTotal) {
+          const added = newTotal - previousTotal;
+          triggerMoneyEffects(added);
+        }
+
+        previousTotal = newTotal;
+        renderApp(newTotal);
       });
     }
 
-    function renderApp() {
-      // 1. Totale e Percentuale (su 5000€)
-      const total = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
+    function renderApp(total) {
+      // 1. Totale e Percentuale
       document.getElementById("total-amount").innerText = `€ ${total.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
       const percentage = Math.min(100, Math.round((total / TARGET_AMOUNT) * 100));
