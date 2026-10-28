@@ -307,23 +307,22 @@
 
   </div>
 
-  <!-- FIREBASE REALTIME DATABASE SCRIPTS -->
+  <!-- FIREBASE REALTIME DATABASE SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Configurazione Database Cloud Firebase Condiviso
     const firebaseConfig = {
-      databaseURL: "https://syntax-santos-ktm-default-rtdb.europe-west1.firebasedatabase.app"
+      databaseURL: "https://fondoktm-51665-default-rtdb.europe-west1.firebasedatabase.app"
     };
 
-    let app, db, donationsRef;
+    let db, donationsRef;
     try {
-      app = initializeApp(firebaseConfig);
+      const app = initializeApp(firebaseConfig);
       db = getDatabase(app);
       donationsRef = ref(db, "donations");
     } catch(err) {
-      console.warn("Errore connessione Firebase:", err);
+      console.warn("Errore inizializzazione Firebase:", err);
     }
 
     const TARGET_AMOUNT = 5000;
@@ -384,7 +383,7 @@
         showAuth();
       });
 
-      // Donazione Form sincronizzata sul Cloud
+      // Donazione Form su Firebase
       document.getElementById("donation-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const amountInput = document.getElementById("donation-amount");
@@ -407,12 +406,12 @@
             amountInput.value = "";
             noteInput.value = "";
           }).catch(err => {
-            console.error("Errore invio cloud:", err);
+            console.error("Errore salvataggio Firebase:", err);
           });
         }
       });
 
-      // Tasti rapidi importo
+      // Tasti rapidi
       document.querySelectorAll(".quick-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const amt = btn.getAttribute("data-amount");
@@ -420,7 +419,7 @@
         });
       });
 
-      // Sezione marche moto
+      // Sezione Marche
       document.querySelectorAll(".bike-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const key = btn.getAttribute("data-bike");
@@ -441,7 +440,7 @@
         });
       });
 
-      listenToDatabase();
+      listenToFirebase();
     });
 
     function showAuth() {
@@ -482,8 +481,8 @@
       }, 1200);
     }
 
-    // Ascolto in tempo reale dei dati dal Cloud per tutti i dispositivi
-    function listenToDatabase() {
+    // Ascolto in tempo reale da Firebase
+    function listenToFirebase() {
       if (!donationsRef) return;
 
       onValue(donationsRef, (snapshot) => {
@@ -506,7 +505,7 @@
         previousTotal = newTotal;
         renderApp(newTotal);
       }, (err) => {
-        console.warn("Errore lettura database:", err);
+        console.error("Errore lettura database Firebase:", err);
       });
     }
 
