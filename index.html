@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KTM SX 125 Motard - Fondo Sostenitori</title>
+  <title>Syntax Santos - 125 2T Motard Fund</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,10 +14,11 @@
         extend: {
           colors: {
             brand: {
-              green: '#22c55e',
-              glow: '#16a34a',
-              dark: '#09090b',
-              card: '#18181b',
+              pink: '#d65a8a',
+              pinkGlow: '#e879a8',
+              pinkDark: '#9e3b62',
+              dark: '#0a0a0c',
+              card: '#121216',
               ktm: '#ff6600'
             }
           }
@@ -27,56 +28,100 @@
   </script>
 
   <!-- Google Fonts & Canvas Confetti -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #09090b;
+      background-color: #0a0a0c;
       color: #f4f4f5;
     }
-    .neon-border {
-      box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
-      border: 1px solid rgba(34, 197, 94, 0.3);
+    .pink-glow {
+      box-shadow: 0 0 20px rgba(214, 90, 138, 0.25);
+      border: 1px solid rgba(214, 90, 138, 0.4);
     }
-    .neon-text {
-      text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    .pink-text {
+      text-shadow: 0 0 12px rgba(214, 90, 138, 0.6);
     }
     .progress-bar-fill {
       transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    /* Intro splash screen animation */
+    #splash-screen {
+      animation: fadeOutSplash 0.8s ease-in-out forwards;
+      animation-delay: 2.2s;
+    }
+    @keyframes fadeOutSplash {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
   </style>
 </head>
-<body class="min-h-screen pb-12 antialiased selection:bg-brand-green selection:text-black">
+<body class="min-h-screen pb-16 antialiased selection:bg-brand-pink selection:text-white">
+
+  <!-- ANIMAZIONE INIZIALE CON IL TUO LOGO (SYNTAX SANTOS) -->
+  <div id="splash-screen" class="fixed inset-0 z-50 bg-[#0a0a0c] flex flex-col items-center justify-center p-4">
+    <div class="relative flex flex-col items-center animate-bounce mb-4">
+      <div class="w-28 h-28 rounded-2xl bg-white p-3 shadow-2xl flex items-center justify-center border-2 border-brand-pink">
+        <!-- Logo Syntax Santos in SVG / Immagine incorporata -->
+        <div class="text-center">
+          <span class="text-brand-pink font-black text-3xl tracking-tighter">&lt;S&gt;</span>
+        </div>
+      </div>
+    </div>
+    <h1 class="text-2xl font-extrabold tracking-wider text-white">SYNTAX SANTOS</h1>
+    <p class="text-xs font-semibold text-brand-pink uppercase tracking-widest mt-1">Web Development</p>
+    <div class="mt-6 flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-brand-pink animate-ping"></span>
+      <span class="text-xs text-zinc-400">Caricamento Paddock...</span>
+    </div>
+  </div>
 
   <!-- APP CONTAINER -->
   <div id="app" class="max-w-xl mx-auto px-4 py-6">
 
-    <!-- HEADER / BANNER -->
+    <!-- HEADER & LOGO FIRMA CREATORE -->
     <header class="text-center mb-6">
-      <div class="relative w-full h-48 rounded-2xl overflow-hidden mb-4 border border-zinc-800 shadow-2xl">
+      <!-- FIRMA CREATORE -->
+      <div class="flex items-center justify-between bg-zinc-900/80 border border-brand-pink/30 rounded-2xl p-3 mb-4 backdrop-blur-md">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black text-brand-pink text-lg shadow">
+            &lt;S&gt;
+          </div>
+          <div class="text-left">
+            <div class="text-xs text-zinc-400 font-medium">Creato da</div>
+            <div class="text-sm font-extrabold text-white tracking-wide">SYNTAX SANTOS</div>
+          </div>
+        </div>
+        <span class="text-[10px] font-bold bg-brand-pink/20 text-brand-pink border border-brand-pink/40 px-2.5 py-1 rounded-full uppercase">Official Dev</span>
+      </div>
+
+      <!-- BANNER MOTO DEI SOGNI (KTM 125 SX) -->
+      <div class="relative w-full h-56 rounded-2xl overflow-hidden mb-4 border border-zinc-800 shadow-2xl group">
         <img 
-          src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1000&q=80" 
-          alt="KTM 125 Motard" 
-          class="w-full h-full object-cover filter brightness-75 hover:scale-105 transition-transform duration-500"
+          src="https://i.pinimg.com/736x/73/24/6f/73246f2d06d0bccd5d64e80d26475e9e.jpg" 
+          alt="La mia moto dei sogni - KTM 125 SX Motard" 
+          class="w-full h-full object-cover filter brightness-90 group-hover:scale-105 transition-transform duration-500"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-black/30 to-transparent"></div>
         <div class="absolute bottom-3 left-4 text-left">
-          <span class="bg-brand-ktm text-black text-xs font-black px-2 py-0.5 rounded tracking-wider uppercase">Project</span>
-          <h1 class="text-2xl font-black italic tracking-tight text-white uppercase mt-1">KTM SX 125 <span class="text-brand-green">Motard</span></h1>
+          <span class="bg-brand-pink text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">Dream Bike 🔥</span>
+          <h1 class="text-2xl font-black italic tracking-tight text-white uppercase mt-1">KTM SX 125 <span class="text-brand-pink">Motard</span></h1>
         </div>
       </div>
     </header>
 
-    <!-- STEP 1: SCHERMATA LOGIN / REGISTRAZIONE -->
+    <!-- ACCESSO / REGISTRAZIONE -->
     <div id="auth-screen" class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl backdrop-blur-md">
       <div class="text-center mb-6">
-        <div class="w-12 h-12 bg-brand-green/10 border border-brand-green/30 text-brand-green rounded-full flex items-center justify-center mx-auto mb-3 font-bold text-xl">
+        <div class="w-12 h-12 bg-brand-pink/10 border border-brand-pink/30 text-brand-pink rounded-full flex items-center justify-center mx-auto mb-3 font-bold text-xl">
           🏍️
         </div>
         <h2 class="text-xl font-bold text-white">Registrati per Continuare</h2>
-        <p class="text-zinc-400 text-sm mt-1">Inserisci il tuo nome per accedere al fondo e registrare la tua donazione.</p>
+        <p class="text-zinc-400 text-sm mt-1">Inserisci il tuo nome per registrarti ed accedere al fondo della mia moto.</p>
       </div>
 
       <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
@@ -87,53 +132,53 @@
             id="user-name-input" 
             placeholder="Es. Zio Marco, Mamma, Nonno..." 
             required
-            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-green transition-colors"
+            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-pink transition-colors"
           />
         </div>
         <button 
           type="submit" 
-          class="w-full bg-brand-green hover:bg-green-600 text-black font-bold py-3 px-6 rounded-xl shadow-lg shadow-green-500/20 transition-all transform active:scale-95 uppercase tracking-wider text-sm"
+          class="w-full bg-brand-pink hover:bg-pink-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-pink-500/20 transition-all transform active:scale-95 uppercase tracking-wider text-sm"
         >
           Accedi al Sito
         </button>
       </form>
     </div>
 
-    <!-- STEP 2: DASHBOARD PRINCIPALE (NASCOSTA INIZIALMENTE) -->
+    <!-- DASHBOARD PRINCIPALE -->
     <div id="dashboard-screen" class="hidden space-y-6">
 
       <!-- WELCOME BAR -->
       <div class="flex items-center justify-between bg-zinc-900/60 border border-zinc-800/80 rounded-xl px-4 py-3">
         <div class="flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 bg-brand-green rounded-full animate-pulse"></span>
-          <span class="text-sm text-zinc-300">Pilota: <strong id="logged-user-display" class="text-white font-bold"></strong></span>
+          <span class="w-2.5 h-2.5 bg-brand-pink rounded-full animate-pulse"></span>
+          <span class="text-sm text-zinc-300">Sostenitore: <strong id="logged-user-display" class="text-white font-bold"></strong></span>
         </div>
-        <button onclick="handleLogout()" class="text-xs text-zinc-500 hover:text-zinc-300 underline">Esci</button>
+        <button onclick="handleLogout()" class="text-xs text-zinc-500 hover:text-brand-pink underline">Esci</button>
       </div>
 
-      <!-- TOTALE E BARRA DI PROGRESSO -->
-      <div class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl neon-border">
+      <!-- TOTALE E BARRA DI PROGRESSO (OBIETTIVO 5000€) -->
+      <div class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl pink-glow">
         <div class="flex justify-between items-end mb-2">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-zinc-400">Raccolta Fondi Totale</span>
-            <div id="total-amount" class="text-4xl font-extrabold text-brand-green neon-text mt-1">€ 0,00</div>
+            <span class="text-xs font-bold uppercase tracking-wider text-zinc-400">Fondo Raccolto</span>
+            <div id="total-amount" class="text-4xl font-extrabold text-brand-pink pink-text mt-1">€ 0,00</div>
           </div>
           <div class="text-right">
-            <span class="text-xs text-zinc-500">Obiettivo: € <span id="target-display">1500</span></span>
-            <div id="percentage-display" class="text-sm font-bold text-zinc-300">0%</div>
+            <span class="text-xs text-zinc-400">Obiettivo: <strong class="text-white">€ 5.000</strong></span>
+            <div id="percentage-display" class="text-sm font-bold text-brand-pink">0%</div>
           </div>
         </div>
 
-        <!-- BARRA -->
+        <!-- BARRA PROGRESSO -->
         <div class="w-full h-4 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800 p-0.5 mt-4">
-          <div id="progress-bar" class="h-full bg-gradient-to-r from-green-600 to-brand-green rounded-full progress-bar-fill w-0"></div>
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-pink-700 via-brand-pink to-brand-pinkGlow rounded-full progress-bar-fill w-0"></div>
         </div>
       </div>
 
       <!-- FORM NUOVA DONAZIONE -->
       <div class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <span>⚡</span> Aggiungi una Donazione
+          <span class="text-brand-pink">💖</span> Aggiungi una Donazione
         </h3>
 
         <form id="donation-form" onsubmit="handleDonation(event)" class="space-y-4">
@@ -142,49 +187,74 @@
             <input 
               type="number" 
               id="donation-amount" 
-              placeholder="Es. 20" 
+              placeholder="Es. 50" 
               min="1" 
               step="any" 
               required
-              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-green text-lg font-bold"
+              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-pink text-lg font-bold"
             />
           </div>
 
           <!-- TASTI RAPIDI -->
           <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="setQuickAmount(10)" class="bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700">+10€</button>
             <button type="button" onclick="setQuickAmount(20)" class="bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700">+20€</button>
             <button type="button" onclick="setQuickAmount(50)" class="bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700">+50€</button>
+            <button type="button" onclick="setQuickAmount(100)" class="bg-zinc-800 hover:bg-zinc-700 text-xs py-2 rounded-lg text-zinc-300 font-semibold border border-zinc-700">+100€</button>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Messaggio / Nota (Opzionale)</label>
+            <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Messaggio (Opzionale)</label>
             <input 
               type="text" 
               id="donation-note" 
-              placeholder="Es. Per il casco nuovo! 🏍️" 
-              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-green text-sm"
+              placeholder="Es. Per lo scarico o la tuta! 🏁" 
+              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-pink text-sm"
             />
           </div>
 
           <button 
             type="submit" 
-            class="w-full bg-brand-green hover:bg-green-600 text-black font-extrabold py-3.5 px-6 rounded-xl shadow-lg shadow-green-500/20 transition-all transform active:scale-95 uppercase tracking-wider text-sm"
+            class="w-full bg-brand-pink hover:bg-pink-600 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-lg shadow-pink-500/20 transition-all transform active:scale-95 uppercase tracking-wider text-sm"
           >
             Registra Donazione
           </button>
         </form>
       </div>
 
+      <!-- SEZIONE MARCHE & MOTO 125 2T -->
+      <div class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl">
+        <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+          <span>🏁</span> Guida Moto 125 2 Tempi
+        </h3>
+        <p class="text-xs text-zinc-400 mb-4">Clicca su una marca per visualizzare l'immagine ed una breve descrizione della moto.</p>
+
+        <!-- SELETTORE MARCHE -->
+        <div class="grid grid-cols-3 gap-2 mb-4">
+          <button onclick="selectBike('ktm')" class="bike-btn bg-brand-pink text-white font-bold text-xs py-2.5 rounded-xl border border-brand-pink transition-all" id="btn-ktm">KTM SX</button>
+          <button onclick="selectBike('yz')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-yz">YAMAHA YZ</button>
+          <button onclick="selectBike('fantic')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-fantic">FANTIC</button>
+          <button onclick="selectBike('gasgas')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-gasgas">GASGAS</button>
+          <button onclick="selectBike('beta')" class="bike-btn bg-zinc-950 text-zinc-300 font-bold text-xs py-2.5 rounded-xl border border-zinc-800 hover:border-brand-pink transition-all" id="btn-beta">BETA</button>
+        </div>
+
+        <!-- CARD MOTO SELEZIONATA -->
+        <div id="bike-display-card" class="bg-zinc-950 rounded-xl overflow-hidden border border-zinc-800 p-4 space-y-3">
+          <img id="bike-img" src="https://i.pinimg.com/736x/73/24/6f/73246f2d06d0bccd5d64e80d26475e9e.jpg" alt="KTM SX 125" class="w-full h-48 object-cover rounded-lg border border-zinc-800">
+          <div>
+            <h4 id="bike-title" class="text-base font-extrabold text-brand-pink">KTM SX 125 (2 Tempi)</h4>
+            <p id="bike-desc" class="text-xs text-zinc-300 mt-1 leading-relaxed">La regina incontrastata delle piste da cross convertita in motard. Iniezione elettronica, potenza pura e ciclistica WP al top.</p>
+          </div>
+        </div>
+      </div>
+
       <!-- TABELLA CLASSIFICA PARENTI -->
       <div class="bg-zinc-900/90 rounded-2xl p-6 border border-zinc-800 shadow-xl">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center justify-between">
           <span class="flex items-center gap-2">🏆 Classifica Sostenitori</span>
-          <span class="text-xs text-zinc-500 font-normal">Totale per utente</span>
+          <span class="text-xs text-zinc-500 font-normal">Totale Donato</span>
         </h3>
 
         <div id="leaderboard-list" class="space-y-2">
-          <!-- Generato via JS -->
           <p class="text-zinc-500 text-sm text-center py-4">Nessuna donazione ancora registrata.</p>
         </div>
       </div>
@@ -196,7 +266,6 @@
         </h3>
 
         <div id="recent-donations-list" class="space-y-3">
-          <!-- Generato via JS -->
           <p class="text-zinc-500 text-sm text-center py-4">Ancora nessuna donazione presente.</p>
         </div>
       </div>
@@ -219,13 +288,41 @@
     const db = getDatabase(app);
     const donationsRef = ref(db, "donations");
 
-    const TARGET_AMOUNT = 1500;
-    let currentUser = localStorage.getItem("ktm_user") || "";
+    const TARGET_AMOUNT = 5000;
+    let currentUser = localStorage.getItem("syntax_user") || "";
     let donationsData = [];
 
-    // Inizializzazione App
+    // Database marche moto
+    const bikesData = {
+      ktm: {
+        title: "KTM SX 125 2T (Moto dei Sogni 🔥)",
+        desc: "La regina del 2 tempi: agilissima, potenza brutale e componentistica da corsa. La mia moto preferita in assoluto per la conversione motard!",
+        img: "https://i.pinimg.com/736x/73/24/6f/73246f2d06d0bccd5d64e80d26475e9e.jpg"
+      },
+      yz: {
+        title: "Yamaha YZ 125 2T",
+        desc: "Storico 2 tempi giapponese leggendario per l'affidabilità, il suono inconfondibile del motore e la maneggevolezza nel misto stretto.",
+        img: "https://i.pinimg.com/736x/67/52/3d/67523d622de74767c0df770bc5351093.jpg"
+      },
+      fantic: {
+        title: "Fantic XE/XX 125 2T",
+        desc: "Italiana con cuore racing, ciclistica affilata e mappa motore personalizzabile via app per il massimo stile su strada.",
+        img: "https://i.pinimg.com/736x/3d/19/5a/3d195a016abcc1faeeff4d8a9ee186c1.jpg"
+      },
+      gasgas: {
+        title: "GasGas MC 125 2T",
+        desc: "Rosso fiammante, deriva direttamente dalla piattaforma KTM offrendo il massimo del divertimento con uno stile ancora più aggressivo.",
+        img: "https://i.pinimg.com/736x/90/e0/dd/90e0dd740718cb576b0683d16f3123c5.jpg"
+      },
+      beta: {
+        title: "Beta RR 125 2T",
+        desc: "Eccellenza del Made in Italy: erogazione fluida ai bassi, grandissima stabilità e stile enduro/motard inconfondibile.",
+        img: "https://i.pinimg.com/1200x/e2/15/95/e2159520993e93ab51dad6fc4fe11de0.jpg"
+      }
+    };
+
+    // Inizializzazione
     window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("target-display").innerText = TARGET_AMOUNT;
       if (currentUser) {
         showDashboard();
       } else {
@@ -234,20 +331,42 @@
       listenToDatabase();
     });
 
+    // Gestione Selezione Moto
+    window.selectBike = function(key) {
+      const bike = bikesData[key];
+      if (!bike) return;
+
+      document.getElementById("bike-title").innerText = bike.title;
+      document.getElementById("bike-desc").innerText = bike.desc;
+      document.getElementById("bike-img").src = bike.img;
+
+      // Aggiorna stile bottoni
+      document.querySelectorAll('.bike-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-pink', 'text-white', 'border-brand-pink');
+        btn.classList.add('bg-zinc-950', 'text-zinc-300', 'border-zinc-800');
+      });
+
+      const activeBtn = document.getElementById(`btn-${key}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-zinc-950', 'text-zinc-300', 'border-zinc-800');
+        activeBtn.classList.add('bg-brand-pink', 'text-white', 'border-brand-pink');
+      }
+    };
+
     // Login Handler
     window.handleLogin = function(e) {
       e.preventDefault();
       const input = document.getElementById("user-name-input").value.trim();
       if (input) {
         currentUser = input;
-        localStorage.setItem("ktm_user", currentUser);
+        localStorage.setItem("syntax_user", currentUser);
         showDashboard();
       }
     };
 
     // Logout Handler
     window.handleLogout = function() {
-      localStorage.removeItem("ktm_user");
+      localStorage.removeItem("syntax_user");
       currentUser = "";
       showAuth();
     };
@@ -263,12 +382,11 @@
       document.getElementById("logged-user-display").innerText = currentUser;
     }
 
-    // Tasti Rapidi Importo
     window.setQuickAmount = function(val) {
       document.getElementById("donation-amount").value = val;
     };
 
-    // Invio Nuova Donazione al Database Cloud
+    // Invio Donazione
     window.handleDonation = function(e) {
       e.preventDefault();
       const amountInput = document.getElementById("donation-amount");
@@ -286,22 +404,20 @@
         timestamp: Date.now()
       };
 
-      // Push su Firebase
       push(donationsRef, newDonation).then(() => {
         amountInput.value = "";
         noteInput.value = "";
 
-        // Effetto Confetti
         confetti({
-          particleCount: 100,
-          spread: 70,
+          particleCount: 120,
+          spread: 80,
           origin: { y: 0.6 },
-          colors: ['#22c55e', '#ffffff', '#ff6600']
+          colors: ['#d65a8a', '#ffffff', '#e879a8', '#ff6600']
         });
       });
     };
 
-    // Ascolto Cambiamenti in Tempo Reale dal Database
+    // Ascolto Firebase Realtime
     function listenToDatabase() {
       onValue(donationsRef, (snapshot) => {
         const data = snapshot.val();
@@ -317,18 +433,16 @@
       });
     }
 
-    // Renderizza Interfaccia con i dati sincronizzati
     function renderApp() {
-      // 1. Calcolo Totale
+      // 1. Totale e Percentuale (su 5000€)
       const total = donationsData.reduce((acc, curr) => acc + (curr.amount || 0), 0);
       document.getElementById("total-amount").innerText = `€ ${total.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
-      // 2. Barra Progresso
       const percentage = Math.min(100, Math.round((total / TARGET_AMOUNT) * 100));
       document.getElementById("progress-bar").style.width = `${percentage}%`;
       document.getElementById("percentage-display").innerText = `${percentage}%`;
 
-      // 3. Classifica
+      // 2. Classifica
       const userTotals = {};
       donationsData.forEach(item => {
         userTotals[item.user] = (userTotals[item.user] || 0) + item.amount;
@@ -352,11 +466,11 @@
           const isMe = item.name === currentUser;
 
           return `
-            <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-xl border ${isMe ? 'border-brand-green/40' : 'border-zinc-800/60'}">
+            <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-xl border ${isMe ? 'border-brand-pink/50' : 'border-zinc-800/60'}">
               <div class="flex items-center space-x-3">
                 ${badge}
-                <span class="font-bold text-sm ${isMe ? 'text-brand-green' : 'text-zinc-200'}">
-                  ${item.name} ${isMe ? '<span class="text-xs bg-brand-green/20 text-brand-green px-1.5 py-0.5 rounded ml-1">(Tu)</span>' : ''}
+                <span class="font-bold text-sm ${isMe ? 'text-brand-pink' : 'text-zinc-200'}">
+                  ${item.name} ${isMe ? '<span class="text-[10px] bg-brand-pink/20 text-brand-pink px-1.5 py-0.5 rounded ml-1">(Tu)</span>' : ''}
                 </span>
               </div>
               <span class="font-extrabold text-sm text-white">€ ${item.total.toLocaleString('it-IT', {minimumFractionDigits: 2})}</span>
@@ -365,7 +479,7 @@
         }).join('');
       }
 
-      // 4. Donazioni Recenti
+      // 3. Cronologia Recente
       const recentContainer = document.getElementById("recent-donations-list");
       const recentSorted = [...donationsData].sort((a, b) => b.timestamp - a.timestamp);
 
@@ -383,7 +497,7 @@
                 </div>
                 ${item.note ? `<p class="text-xs text-zinc-400 mt-0.5 italic">"${item.note}"</p>` : ''}
               </div>
-              <span class="font-bold text-brand-green text-sm">+ € ${item.amount.toLocaleString('it-IT', {minimumFractionDigits: 2})}</span>
+              <span class="font-bold text-brand-pink text-sm">+ € ${item.amount.toLocaleString('it-IT', {minimumFractionDigits: 2})}</span>
             </div>
           `;
         }).join('');
